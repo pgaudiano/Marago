@@ -1,0 +1,199 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns:fb="http://ogp.me/ns/fb#" xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en" dir="ltr">
+<head>
+<title>Marago&trade;</title>
+<meta http-equiv="Content-Type" content="text/html" charset="utf-8">
+<!-- All the CSS is in id.css -->
+<link rel="stylesheet" type="txt/css" href="marago.css">
+<script type="text/javascript" src="constructors.js"></script>
+<script type="text/javascript" src="parameters.js"></script>
+<script type="text/javascript" src="marago.js"></script>
+<script type="text/javascript" src="draggable.js"></script>
+</head>
+<body onload="newGame()">
+
+<!-- Initially this should be the only visible panel -->
+<div id="gameSetupPanel" class="centeredFloatingDiv">
+  <h1>Welcome to Marago&trade;!</h1>
+
+  <!-- This is the opening panel, where the main player sets up parameters -->
+  <div id="openingPanel">
+    <!-- The first panel shown has basic parameters for the main user -->
+    <div id="player0Profile" class="setupPanel">
+      <h2> Step 1: Set up your game </h2>
+      Your name: <input id="p0Name" value="Player 1" width="10" \>
+	<div id="p0ColorDiv">
+	  Your color: 
+	</div>
+	<script>
+	  createColorSelector(0);
+	</script>
+
+	<div id="p0IsHumanDiv">
+	  AI player? 
+	  <input type="checkbox" id="p0IsNotHuman" 
+		 onchange="document.getElementById('p0StrategyDiv').style.display=(document.getElementById('p0IsNotHuman').checked)?'inline-block':'none';"/>
+	  <div style="display:none;margin-left:0.5em;" id="p0StrategyDiv">Strategy: 
+	  </div>
+	  <script>
+	    // Now create the strategy selector in case this one is an AI player too...
+	    var sSel = document.createElement('select');
+	    sSel.id = 'p0StrategySelector';
+	    for (var cs in AICardStrategies) {
+	    for (var ps in AIPointStrategies) {
+	    var opt = document.createElement('option');
+	    var sname = AICardStrategies[cs]+'-'+AIPointStrategies[ps];
+	    opt.value = sname;
+	    opt.text = sname;
+	    sSel.add(opt); // Add each new option to the selector
+	    }
+	    }
+	    document.getElementById('p0StrategyDiv').appendChild(sSel); // Add the selector to the strategy selector div
+	  </script>
+	</div>
+	
+	<div id="numOpponentsDiv">
+	  How many opponents (1-4)? 
+          <select id="numOpponents">
+	    <option value="1">1</option>
+	    <option value="2">2</option>
+	    <option value="3" selected>3</option>
+	    <option value="4">4</option>
+	  </select>
+	</div>
+
+	<div id="boardSetupDiv">
+	  Select card groups: 
+	  <select id="cardGroups">
+	    <option value="3">1-3</option>
+	    <option value="7" selected>All</option>
+	  </select>
+	</div>
+      </div>
+
+      <button id="setupOpponentsButton" class="setupButtons" onclick="initOpponents()">
+	Next: Opponent setup
+      </button>
+    </div>
+
+    <!-- This is the panel for selecting opponents. Created dynamically -->
+    <div id="opponentPlayersPanel">
+      <div id="initOpponentPlayersDiv" class="setupPanel">
+      </div>
+      <button id="startGameButton" class="setupButtons" onclick="gameSetup()">Let's play!</button>
+    </div>
+
+
+</div>
+
+<!-- This is where we set up the baord. -->
+<div id="board" style="position;relative;">
+
+<!-- This is the div used to show the large-size original marago popup -->
+<div id="cardView" class="centeredFloatingDiv">
+  <img id="cardViewImg" class="card" onclick="document.getElementById('cardView').style.display='none';" />
+</div>
+
+<!-- This is the panel with the player information -->
+<div id="playersPanel" >
+  <table id="playersPanelTable">
+  </table>
+</div>
+
+<!-- This is the pop-up card score panel -->
+<div id="scorePanel">
+  <!-- Header at the top of the panel showing current player info -->
+  <h1 id="scorePanelHeader">
+    <img id="scorePanelHeaderButton" class="smallButton"></img>
+    <span id="scorePanelHeaderPlayer"></span>:
+    score card for 
+    <span id="scorePanelHeaderCard"></span>
+  </h1>
+
+  <!-- Table with your score options and the other players scores -->
+  <table class="playersScoreTable">
+    <tr>
+      <td class="currentPlayerScoreTable">
+	<div class="scoreBoxHeader">Current score: <span id="currentPlayerScore"></span>
+	</div>
+	<div class="cardPoints">
+	Buddies points: <span id="currentPlayerLinkPoints"></span><br/>
+        Specs. points: <span id="currentPlayerPartnerPoints"></span><br/>
+        <form id="starForm">
+	  <div id="starPointsSection">
+	  </div> 
+	 </form> <!-- End of starForm -->
+	<span id="currentPlayerStarPoints">Star points: 0</span>
+	<div id="bonusLine"> <!-- Notice we keep this inside the same form and div for convenience -->
+	</div>
+	</div> 
+	
+      </td> <!-- End of current player box -->
+      <td>
+        <div class="totalScores">
+	  Minimum points: <span id="currentPlayerCardCost"></span><br/>
+	  Maximum points: <span id="currentPlayerMaxPoints"></span><br/>
+	  Selected points: <span id="totalCardPoints"></span>
+	</div>
+	<div class="newScore">
+	  Your new score: <span id="newScore"></span>
+	</div>
+	<!-- Submit and cancel button -->
+	<div class="scorePanelButtons">
+	  <button onclick="confirmMove()">Confirm</button>
+	  <button onclick="cancelCalculateScore()" style="margin-left: 10px;">Cancel</button>
+	</div>
+
+	</td>
+    </tr>
+  </table>
+</div>
+
+<!-- This is the small panel of game-level action buttons -->
+<div id="gameActionsPanel">
+<table class="gameActionsTable">
+  <tr>
+    <td>
+      <img id="cardScoreOverlaysButton" onclick="toggleCardScoreOverlays()" class="actionIcons toggleOff" src="Img/calculator_off_64.png" alt="Reset Game" \>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <img onclick="gameReset()" class="actionIcons" src="Img/reload_64.png" alt="Reset Game" \>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <img onclick="randomBoard()" class="actionIcons" src="Img/arrow_64.png" alt="Random Game"\>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <img onclick="gameOver()" class="actionIcons" src="Img/auction_64.png" "End Game"\>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <img onclick="restartGame()" class="actionIcons" src="Img/arrow_circle_left_64.png" "End Game"\>
+    </td>
+  </tr>
+</table>
+
+</div>
+
+<div id="cardsTableDiv">
+<table id="cardsTable">
+</table>
+</div>
+
+</div> <!-- End of the overall board div -->
+
+<div id="footer">
+  <a href="http://www.totalmarago.com" target="_blank">TotalMarago</a>&trade; by Zoxor - Online version by P. Gaudiano
+<a href="Help/GameElements.html" target="_Blank">
+<span style="background-color: #666666;"><img src="Img/magnifier_64.png" style="height:1em;border:none"></span>
+</a>
+</div>
+
+</body>
+</html>
