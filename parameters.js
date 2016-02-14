@@ -4,7 +4,7 @@ var consoleDebug = 1;
 /* ------ GENERAL GAME PARAMETERS ------ */
 /* Flags to control overall behavior */
 var landscape = 1; // Landscape or potrait?
-var useDibsAndBids = true; // Include the dibs & bids
+var useDibsAndBids = false; // Include the dibs & bids
 var useWildCards = false; // Play with or without wildcards?
 /* Global turn tracker */
 var gameTurns;

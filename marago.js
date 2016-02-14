@@ -138,7 +138,18 @@ function restartGame() {
 /* This fuction gets invoke when the page is loaded or a new game is started */
 function newGame() {
 
-    debug("Starting a new game");
+    debug("Starting a new game from "+arguments.callee.caller.name);
+
+    /* If the page was just (re)loaded, check the URL params */
+    if (arguments.callee.caller.name == "onload") { 
+	var URLParams = getURLParams();
+	
+	// Check if we should use dibs & bids
+	if (URLParams.dibs) {
+	    useDibsAndBids = URLParams.dibs;
+	    debug("This game will use Dibs & Bids");
+	}
+    }
 
     document.getElementById("gameSetupPanel").style.display = "block";
     document.getElementById('openingPanel').style.display = "block";
