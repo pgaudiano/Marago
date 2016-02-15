@@ -1212,7 +1212,12 @@ function disableFinishButton () {
 /* This function cancels the score calculation without saving the results */
 function cancelCalculateScore() {
 
-    document.getElementById("scorePanel").style.display = "none";
+    // Remove the last button if it's been selected
+    if (lastToggledCard.hasButton) {
+	lastToggledCard.clearButton();
+    }
+
+    hideScorePanel();
 
 }
 
