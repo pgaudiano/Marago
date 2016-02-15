@@ -812,7 +812,7 @@ function drawStarPoints (p,c) {
 /* Refresh the various star scores */
 function updateStarPointsDisplay(p,c) {
     refreshContent("currentPlayerStarPoints",((c.stars > 0)?"Selected star points: ":"Star points: ")+p.tempPoints.starSelectedPts); // PPG Here???
-    for (s = 0; s < c.cards; s++) {
+    for (s = 0; s < c.stars; s++) {
 	refreshContent("starPoints"+s,p.tempPoints.starsSelected[s]*ptsPerStar);
     }
 }
@@ -916,6 +916,9 @@ function updateStarPoints (star,value) {
     for (s=0; s < lastToggledCard.stars; s++) {
 	p.tempPoints.starSelectedPts += p.tempPoints.starsSelected[s]*ptsPerStar;
     }
+
+    // Update the star points in the star points table
+    updateStarPointsDisplay(p,lastToggledCard);
 
     // Based on the updated stars, calculate the player's new points
     p.updateTempScore();
