@@ -16,3 +16,21 @@ function getURLParams() {
 
     return params;
 }
+
+
+/* A function to create a popup - similar to the JS  built-in "alert" */
+function mAlert(msg) {
+    var ap = document.getElementById('alertPanel');
+
+    ap.style.display = 'block';
+
+    // Assume the string passed in is in the right format
+    ap.innerHTML = msg.replace(/\n/g,"<br>");
+
+    var cb = document.createElement('button');
+    cb.onclick = function () {ap.style.display = 'none';};
+    cb.appendChild(document.createTextNode('Close'));
+
+    ap.appendChild(cb);    
+
+}

@@ -81,7 +81,7 @@ function playerObj(name,col,human) {
     this.resetStarLevelArray = function () {
 	this.starLevels = [];
 	for (var r=0; r <= maxRows; r++) {
-	    this.starLevels.push(((r < 2)?1:0)); // Can never have < 1 star.
+	    this.starLevels.push(((r < 1)?1:0)); // Set the zeroeth level to 1 though it's useless
 	}
     }
 

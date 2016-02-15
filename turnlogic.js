@@ -17,7 +17,7 @@
 function beginGameTurn () {
     var p = players[currentPlayer];
 
-    updatePlayersPanel2(p.num); // Refresh the entire players panel
+    updatePlayersPanel(p.num); // Refresh the entire players panel
     updatePlayerInspectors(p.num); // Refresh/draw all the player inspector panels
     p.initTurn(); // Initialize the turn for the current player
     beginPlayerMove(p);

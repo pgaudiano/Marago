@@ -230,6 +230,7 @@ function initializeGame() {
     // PPG TEST draggable class on card view panel
     // new Draggable('gameSetupPanel');
     new Draggable('cardView');
+    new Draggable('alertPanel');
 
     // Set the first player and begin the turn
     currentPlayer = 0;
@@ -884,13 +885,13 @@ function calculateScore() {
 
     /* If the player has not selected a card, alert and ignore */
     if (!lastToggledCard.hasButton || (lastToggledCard.player != currentPlayer && lastToggledCard.player > -1)) {
-	alert("You must select a card to confirm your move!");
+	mAlert("You must select a card to confirm your move!");
 	return;
     }
 
     // If you already confirmed, give an alert and get out
     if (playerMoveConfirmed) {
-	alert('Sorry, you already confirmed your move. Please press "Finish turn"');
+	mAlert('Sorry, you already confirmed your move. Please press "Finish turn"');
 	return;
     }
 
@@ -1038,11 +1039,11 @@ function cardAction(e,cardId) {
     //    debug('You clicked card '+myCard.id+' with ID '+cardId+' of type '+typeof(cardId));
 
     if (playerMoveConfirmed) {
-	alert("Sorry, you already confirmed your move! ");
+	mAlert("Sorry, you already confirmed your move! ");
 	return;
     }
     if (!myCard.unclaimed) {
-	alert("Sorry, that card is already selected.");
+	mAlert("Sorry, that card is already selected.");
 	return;
     }
     if (myCard.hasButton) { // Toggle the button off, close score panel if needed.
@@ -1141,7 +1142,7 @@ function playerStats () {
 	}
     }
 	    
-    alert("Game statistics for "+p.name+" ("+p.color.name+"):"+
+    mAlert("Game statistics for "+p.name+" ("+p.color.name+"):"+
 	  "\n Cards owned ("+cs.length+"): "+cs+
 	  "\n Groups owned: "+gs.sort()+
 	  "\n Wildcards held: "+p.wildCards+
@@ -1157,11 +1158,15 @@ function playerInspector (pnum) {
 
     var p = players[pnum];
     var gs = [];
+    
+    // Copy the groups array into a new array
     for (var g in groupOwner) {
 	if (groupOwner[g] == currentPlayer) {
 	    gs.push(groupLabels[g]);
 	}
     }
+
+    // Copy the cardsOwned array into a new array
     var cs = [];
     for (var g in p.cardsOwned) {
 	for (var r in p.cardsOwned[g]) {
@@ -1169,7 +1174,8 @@ function playerInspector (pnum) {
 	}
     }
 	    
-    alert("Game statistics for "+p.name+" ("+p.color.name+"):"+
+    // Now pop up some information
+    mAlert("Game statistics for "+p.name+" ("+p.color.name+"):"+
 	  "\n Cards owned ("+cs.length+"): "+cs+
 	  "\n Groups owned: "+gs.sort()+
 	  "\n Wildcards held: "+p.wildCards+
@@ -1182,7 +1188,7 @@ function playerInspector (pnum) {
 
 /* This function allows viewing and modifying certain player parameters */
 function playerProperties (pnum) {
-    alert("Displaying properties for "+players[pnum].name);
+    mAlert("Displaying properties for "+players[pnum].name);
 }
 
 /* This function turns on the Finish Turn button */
@@ -1537,7 +1543,7 @@ function AIRandomMove () {
 	    }
 
     if (cnt > 50) {
-	alert("Problem with the while loop inside AIRandomMove - just crashed after "+cnt);
+	mAlert("Problem with the while loop inside AIRandomMove - just crashed after "+cnt);
     }
 
     // Update the player's tempPoints object to reflect the card selected
@@ -1616,7 +1622,7 @@ function gameOver() {
     }
 
     if (cardsLeft < 1) { // All done, the game must be restarted!
-	alert(go+"\nA new game will be started.");
+	mAlert(go+"\nA new game will be started.");
 	initializeGame();
     } else { // Sometimes (for now anyway) the player hits the end game just to see where things stand.
 	go += "Do you want to restart this game?";

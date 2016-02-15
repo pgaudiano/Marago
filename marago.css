@@ -603,6 +603,35 @@ display: none;
 	   visibility: hidden;
 }
 
+#alertPanel {
+  position: fixed;
+  top: 20%;
+  left: 50%;
+  /* this ensures it will be in the middle */
+  transform: translate(-50%, -20%);
+  -webkit-transform: translate(-50%, -20%);
+  -ms-transform: translate(-50%, -20%);
+  background-color: #E5E5E5;
+  border: 3px solid #333333;
+  padding: 0.5% 2%;
+  z-index: 40;
+  border-radius: 10px;
+  text-align: center;
+  font-size: 0.9em;
+  box-shadow: 0 0 20px #E5E5E5;
+  cursor: move;
+  display: none;
+}
+
+#alertPanel button {
+	    position: relative;
+	    display: block;
+	    font-size: 1em;
+	    margin-top: 0.5em;
+	    margin-left: auto;
+	    margin-right: auto;
+}
+
 #footer {
 	position: fixed;
 	bottom: 5px;
